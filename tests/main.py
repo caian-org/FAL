@@ -12,10 +12,12 @@ sys.path.append(wrappers_dir)
 
 
 from fal import add_and_multiples
+from fal import list_s3_buckets
 
 
 def main():
     print(add_and_multiples(3))
+    list_s3_buckets()
 
 
 if __name__ == '__main__':

@@ -1,11 +1,9 @@
 .DEFAULT_GOAL := build
 
 
+init:
+	rm -rf build && mkdir build && cd build && conan install .. --build=missing
+
 .PHONY: build
 build:
-	g++ \
-		-fPIC \
-		-fvisibility=hidden \
-		-shared \
-		-o build/FAL.so \
-		FAL/FAL.cpp
+	cd build && cmake .. && cmake --build . --config Release
