@@ -3,7 +3,7 @@ const { promisify } = require('util')
 
 const { Library } = require('ffi-napi')
 
-function getFile () {
+function getSharedLibPath () {
   const buildDir = resolve(__dirname, '..', '..', '..', 'build')
 
   if (process.platform === 'win32') {
@@ -29,7 +29,7 @@ function init () {
     listS3Buckets: ['void', []]
   }
 
-  const lib = Library(getFile(), exportedFunctions)
+  const lib = Library(getSharedLibPath(), exportedFunctions)
 
   /* sync */
   const addAndMultipliesSync = (value) => lib.addAndMultiplies(value)

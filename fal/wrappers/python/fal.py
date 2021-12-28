@@ -9,7 +9,7 @@ from os.path import realpath
 from os.path import join
 
 
-def get_file():
+def get_shared_lib_path():
     build_dir = abspath(join(dirname(realpath(__file__)), '..', '..', '..', 'build'))
     kernel = platform.system()
 
@@ -28,7 +28,7 @@ def get_file():
 
 
 def init():
-    lib = CDLL(get_file())
+    lib = CDLL(get_shared_lib_path())
     lib.addAndMultiplies.argtypes = [c_int]
 
     def add_and_multiples(num):
