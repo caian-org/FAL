@@ -14,7 +14,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 add_library(FAL SHARED
-    FAL/FAL.cpp
+    fal/FAL.cpp
 )
 
 target_link_libraries(FAL ${CONAN_LIBS})
