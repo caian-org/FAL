@@ -8,7 +8,7 @@ from os.path import join
 
 def import_fal():
     here = dirname(realpath(__file__))
-    wrappers_dir = abspath(join(here, '..', '..', 'FAL', 'wrappers', 'python'))
+    wrappers_dir = abspath(join(here, '..', '..', 'fal', 'wrappers', 'python'))
     sys.path.append(wrappers_dir)
 
     import fal

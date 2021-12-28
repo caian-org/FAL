@@ -1,4 +1,4 @@
-const fal = require('../../FAL/wrappers/javascript')
+const fal = require('../../fal/wrappers/javascript')
 const myLib = fal.init()
 
 async function main () {
