@@ -16,7 +16,7 @@ def get_ext():
         return 'so'
 
     if kernel == 'Windows':
-        return 'dll'
+        return 'so'
 
     if kernel == 'Darwin':
         return 'dylib'

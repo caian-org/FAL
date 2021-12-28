@@ -5,11 +5,15 @@
 
 // __attribute__ is a GCC-specific keyword and does not exists on MS C++ Compiler
 #ifdef _MSC_VER
-#define __attribute__(x)
+#define FAL_EXPORT
+#else
+#define FAL_EXPORT __attribute__((visibility("default")))
 #endif
 
 int _listS3Buckets() {
     Aws::SDKOptions options;
+    options.loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Debug;
+
     Aws::InitAPI(options);
     {
         Aws::S3::S3Client client;
@@ -35,15 +39,11 @@ int _addAndMultiples(int num) {
 }
 
 extern "C" {
-    int
-    __attribute__((visibility("default")))
-    addAndMultiplies(int a) {
+    FAL_EXPORT int addAndMultiplies(int a) {
         return _addAndMultiples(a);
     }
 
-    int
-    __attribute__((visibility("default")))
-    listS3Buckets() {
+    FAL_EXPORT int listS3Buckets() {
         return _listS3Buckets();
     }
 }
