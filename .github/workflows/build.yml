@@ -1,0 +1,64 @@
+name: Build test
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+        include:
+          - os: ubuntu-latest
+            python-arch: 'x64'
+            python-version: '3.8.x'
+            prepare-python: true
+            install-headerfiles: true
+            gcc-version: '9'
+
+          - os: macos-latest
+            python-arch: 'x64'
+            python-version: '3.8.x'
+            prepare-python: true
+            install-headerfiles: false
+
+          - os: windows-latest
+            python-arch: 'x86'
+            python-version: '3.8.x'
+            prepare-python: true
+            install-headerfiles: false
+            vs-version: 16
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.python-arch }}
+        if: matrix.prepare-python
+
+      - name: Install C and C++ header files
+        run: |
+          sudo apt-get update && sudo apt-get install -y gcc-multilib g++-multilib
+        if: matrix.install-headerfiles
+
+      - name: Install conan && conan package tools
+        run: |
+          python3 -m pip install --upgrade pip
+          pip3 install conan
+          pip3 install conan_package_tools
+
+      - name: Build
+        run: |
+          make init
+          make build
+        env:
+          CONAN_VISUAL_VERSIONS: ${{ matrix.vs-version }}
+          CONAN_GCC_VERSIONS: ${{ matrix.gcc-version }}
+          CONAN_APPLE_CLANG_VERSIONS: '12.0'
+          CONAN_PIP_COMMAND: pip3
