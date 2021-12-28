@@ -15,4 +15,4 @@ function syncTest () {
   console.log(myLib.addAndMultipliesSync(3))
 }
 
-syncTest()
+asyncTest()
