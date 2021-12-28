@@ -9,28 +9,26 @@ from os.path import realpath
 from os.path import join
 
 
-def get_ext():
+def get_file():
+    build_dir = abspath(join(dirname(realpath(__file__)), '..', '..', '..', 'build'))
     kernel = platform.system()
 
-    if kernel == 'Linux':
-        return 'so'
-
     if kernel == 'Windows':
-        return 'so'
+        return join(build_dir, 'bin', 'FAL.dll')
+
+    lib_path = join(build_dir, 'lib', 'libFAL.')
+
+    if kernel == 'Linux':
+        return lib_path + 'so'
 
     if kernel == 'Darwin':
-        return 'dylib'
+        return lib_path + 'dylib'
 
     raise Exception('Unsupported system')
 
 
 def init():
-    here = dirname(realpath(__file__))
-
-    lib_file = 'libFAL.' + get_ext()
-    lib_path = abspath(join(here, '..', '..', '..', 'build', 'lib', lib_file))
-
-    lib = CDLL(lib_path)
+    lib = CDLL(get_file())
     lib.addAndMultiplies.argtypes = [c_int]
 
     def add_and_multiples(num):

@@ -15,20 +15,21 @@ jobs:
             python-version: '3.8.x'
             prepare-python: true
             install-headerfiles: true
-            gcc-version: '9'
+            configure-conan: true
 
           - os: macos-latest
             python-arch: 'x64'
             python-version: '3.8.x'
             prepare-python: true
             install-headerfiles: false
+            configure-conan: false
 
           - os: windows-latest
-            python-arch: 'x86'
+            python-arch: 'x64'
             python-version: '3.8.x'
             prepare-python: true
             install-headerfiles: false
-            vs-version: 16
+            configure-conan: false
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -54,19 +55,18 @@ jobs:
           pip3 install conan
           pip3 install conan_package_tools
 
+      - name: Configure conan
+        run: |
+          conan profile new default --detect
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+        if: matrix.configure-conan
+
       - name: Build
         run: |
           make init
           make build
         env:
-          CONAN_VISUAL_VERSIONS: ${{ matrix.vs-version }}
-          CONAN_GCC_VERSIONS: ${{ matrix.gcc-version }}
-          CONAN_APPLE_CLANG_VERSIONS: '12.0'
           CONAN_PIP_COMMAND: pip3
-
-      - name: List content
-        run: ls -lash build/lib
-        shell: bash
 
       - name: Run test
         run: python3 tests/python/main.py
