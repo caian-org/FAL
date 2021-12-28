@@ -3,9 +3,8 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/Bucket.h>
 
-// __attribute__ is a GCC-specific keyword and does not exists on MS C++ Compiler
 #ifdef _MSC_VER
-#define FAL_EXPORT
+#define FAL_EXPORT __declspec(dllexport)
 #else
 #define FAL_EXPORT __attribute__((visibility("default")))
 #endif
