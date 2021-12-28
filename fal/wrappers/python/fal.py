@@ -16,13 +16,13 @@ def get_file():
     if kernel == 'Windows':
         return join(build_dir, 'bin', 'FAL.dll')
 
-    lib_path = join(build_dir, 'lib', 'libFAL.')
+    lib_path = join(build_dir, 'lib', 'libFAL')
 
     if kernel == 'Linux':
-        return lib_path + 'so'
+        return lib_path + '.so'
 
     if kernel == 'Darwin':
-        return lib_path + 'dylib'
+        return lib_path + '.dylib'
 
     raise Exception('Unsupported system')
 

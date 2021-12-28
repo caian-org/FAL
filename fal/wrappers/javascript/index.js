@@ -1,7 +1,27 @@
-const { resolve } = require('path')
+const { resolve, join } = require('path')
 const { promisify } = require('util')
 
 const { Library } = require('ffi-napi')
+
+function getFile () {
+  const buildDir = resolve(__dirname, '..', '..', '..', 'build')
+
+  if (process.platform === 'win32') {
+    return join(buildDir, 'bin', 'FAL.dll')
+  }
+
+  const libPath = join(buildDir, 'lib', 'libFAL')
+
+  if (process.platform === 'linux') {
+    return libPath + '.so'
+  }
+
+  if (process.platform === 'darwin') {
+    return libPath + '.dylib'
+  }
+
+  throw new Error('Unsupported system')
+}
 
 function init () {
   const exportedFunctions = {
@@ -9,8 +29,7 @@ function init () {
     listS3Buckets: ['void', []]
   }
 
-  const soPath = resolve(__dirname, '..', '..', '..', 'build', 'lib', 'libFAL.dylib')
-  const lib = Library(soPath, exportedFunctions)
+  const lib = Library(getFile(), exportedFunctions)
 
   /* sync */
   const addAndMultipliesSync = (value) => lib.addAndMultiplies(value)
