@@ -3,19 +3,16 @@
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/Bucket.h>
 
-using namespace Aws;
+// __attribute__ is a GCC-specific keyword and does not exists on MS C++ Compiler
+#ifdef _MSC_VER
+#define __attribute__(x)
+#endif
 
 int _listS3Buckets() {
-    //The Aws::SDKOptions struct contains SDK configuration options.
-    //An instance of Aws::SDKOptions is passed to the Aws::InitAPI and
-    //Aws::ShutdownAPI methods.  The same instance should be sent to both methods.
-    SDKOptions options;
-    options.loggingOptions.logLevel = Utils::Logging::LogLevel::Debug;
-
-    //The AWS SDK for C++ must be initialized by calling Aws::InitAPI.
-    InitAPI(options);
+    Aws::SDKOptions options;
+    Aws::InitAPI(options);
     {
-        S3::S3Client client;
+        Aws::S3::S3Client client;
 
         auto outcome = client.ListBuckets();
         if (outcome.IsSuccess()) {
@@ -29,8 +26,7 @@ int _listS3Buckets() {
         }
     }
 
-    //Before the application terminates, the SDK must be shut down.
-    ShutdownAPI(options);
+    Aws::ShutdownAPI(options);
     return 0;
 }
 
