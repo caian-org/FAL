@@ -55,6 +55,14 @@ functions:
 
   - name: build-doc
     arn: arn:aws:lambda:us-east-1:000000000000:function:build-document
+    with:
+      cache-policy:
+        enabled: true
+        max-size: 100MB
+        max-retained: 50
+        max-retained-buffer: 200
+        retained-lifespan: 2 hours
+        retained-buffer-lifespan: 30 minutes
 
   - name: save-on-s3
     arn: arn:aws:lambda:us-east-1:000000000000:function:save-on-s3
