@@ -8,18 +8,38 @@ arns:
 
 
 # ------- the config starts from here -------
+#
+# all keys are case-sensitive; do NOT mix them with uppercase letters
 
+# -------------------------------------------
+# although mostly optional, this properties are important if you pretend to
+# release a built package on npm, pypi etc; for internal usage, they're
+# relevant for documentation/organization
 meta:
-  package-name: my-company-funcs
+  package:
+    # if unset, the package will fallback to the current directory name
+    name: my-company-funcs
+
+    # if unset, the package version will fallback to 0.1.0
+    version: 1.0.0
+
+    # the following, if unset, will be discarded
+    author: Caian Ertl <hi@caian.org>
+    description: The Company's (TM) assemblies
 
 
+# -------------------------------------------
+# available targets: python, ruby, nodejs
 targets:
-  # available targets: python, ruby, nodejs
+  # at least one option must be provided; if an unknown option or none is
+  # provided, FAL will fail
   - python
 
 
+# -------------------------------------------
 functions:
-  # the lambda functions used by the assemblies
+  # the lambda functions used by the assemblies; 'name' and 'arn' are required
+  # FAL will use the ARN to validate the function existence and will fail if it can't
   - name: extract-data
     arn: *extract-data-arn
     with:
@@ -29,7 +49,8 @@ functions:
   - name: extract-data-with-default
     arn: *extract-data-arn
     with:
-      # functions can be called with a default value
+      # functions can be called with a default value; when 'default-input' is
+      # set to a non-empty string, 'input' will be set -- or overwritten -- to true
       default-input: some-relevant-string-like-a-url-or-whatever
 
   - name: build-doc
@@ -45,13 +66,11 @@ functions:
     arn: arn:aws:lambda:us-east-1:000000000000:function:send-by-email-to-bob
 
 
-# available step types:
-#  - call
-#  - series
-#  - map
+# -------------------------------------------
+# available step types: call, series, map
 #
-# all of them are synchronous; 'series' will execute N funcs in a loop, buffer
-# the results and then send the aggregated data to the next step
+# all of them are synchronous; 'series' will execute N funcs inside a loop,
+# buffer the results and then send the aggregated data to the next step
 #
 # if asynchronicity is desired, the user should use a language feature to do so
 # (event-loop on node via promises or python via asyncio, threads on ruby etc)
@@ -74,6 +93,11 @@ assemblies:
   # on nodejs, this would be the import:
   #
   # > const { buildAndSave } from 'my-company-funcs'
+  #
+  # ~~~~~
+  #
+  # the assembly name -- 'name' key -- is required and the 'steps' list must
+  # have at least one item
   - name: build-and-save
     steps:
       # the simplest possible assembly: 'extract-data' fetches some data and the
@@ -98,7 +122,8 @@ assemblies:
   # why? suppose the series is [x, y, z]; where y has a default value but x and z, not
   # this would not work -- func('lorem', 'ipsum') -- since z expect something
   #
-  # this would be the appropriate call: func('lorem', '', 'ipsum') -- or func('lorem', None, 'ipsum')
+  # this would be the appropriate call:
+  #   func('lorem', '', 'ipsum') -- or func('lorem', None, 'ipsum')
   - name: another-assembly-line
     steps:
       # either all of them accepts inputs or neither
@@ -123,4 +148,13 @@ assemblies:
       #   --> sns-pub(doc-two-url)
       #   --> email-bob(doc-one-url)
       #   --> email-bob(doc-two-url)
+      #
+      # all steps are awaited by default (awaits = true); you can specify that
+      # FAL must not wait for the response of a function using the key 'awaits'
+      #
+      # here, all four calls will be made but no data will be returned to the
+      # caller -- 'no data' meaning an empty string
+      #
+      # this can be useful to reduce the execution time of an assembly line
       - series: [sns-pub, email-bob]
+        awaits: false
