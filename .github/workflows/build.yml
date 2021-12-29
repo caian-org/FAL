@@ -23,11 +23,6 @@ jobs:
         with:
           node-version: 16.13.x
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.7.5
-
       - name: Set up Python
         uses: actions/setup-python@v2
         with:

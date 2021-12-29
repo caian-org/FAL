@@ -16,5 +16,5 @@ tests:
 	@python3 tests/python/main.py
 	@printf "\n%s\n" "--- javascript package tests ---"
 	@node tests/javascript/index.js
-	@printf "\n%s\n" "--- ruby package tests ---"
-	@ruby tests/ruby/main.rb
+	# @printf "\n%s\n" "--- ruby package tests ---"
+	# @ruby tests/ruby/main.rb
