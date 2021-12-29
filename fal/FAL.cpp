@@ -2,12 +2,18 @@
 #include <aws/core/Aws.h>
 #include <aws/s3/S3Client.h>
 #include <aws/s3/model/Bucket.h>
+#include <sw/redis++/redis++.h>
 
 #ifdef _MSC_VER
 #define FAL_EXPORT __declspec(dllexport)
 #else
 #define FAL_EXPORT __attribute__((visibility("default")))
 #endif
+
+void _doSomething() {
+    auto redis = sw::redis::Redis("tcp://127.0.0.1:6379");
+    redis.set("key", "val");
+}
 
 int _listS3Buckets() {
     Aws::SDKOptions options;
@@ -44,5 +50,9 @@ extern "C" {
 
     FAL_EXPORT int listS3Buckets() {
         return _listS3Buckets();
+    }
+
+    FAL_EXPORT void doSomething() {
+        _doSomething();
     }
 }
