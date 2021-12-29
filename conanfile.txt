@@ -1,5 +1,6 @@
 [requires]
 aws-sdk-cpp/1.8.130
+redis-plus-plus/1.2.3
 
 [generators]
 cmake
