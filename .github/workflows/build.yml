@@ -54,7 +54,6 @@ jobs:
       - name: Install wrappers dependencies
         run: |
           ( cd fal/wrappers/javascript && npm install )
-          ( cd fal/wrappers/ruby && bundle install )
 
       - name: Run tests
         run: make tests
