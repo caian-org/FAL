@@ -1,0 +1,126 @@
+# custom objects can be defined to be reused later (YAML anchors)
+
+arns:
+  xd: &extract-data-arn arn:aws:lambda:us-east-1:000000000000:function:extract-data
+
+# the only root objects that FAL cares are: 'meta', 'targets', 'functions' and
+# 'assemblies'; everything else is ignored
+
+
+# ------- the config starts from here -------
+
+meta:
+  package-name: my-company-funcs
+
+
+targets:
+  # available targets: python, ruby, nodejs
+  - python
+
+
+functions:
+  # the lambda functions used by the assemblies
+  - name: extract-data
+    arn: *extract-data-arn
+    with:
+      input: true  # true by default
+      output: true # also true by default
+
+  - name: extract-data-with-default
+    arn: *extract-data-arn
+    with:
+      # functions can be called with a default value
+      default-input: some-relevant-string-like-a-url-or-whatever
+
+  - name: build-doc
+    arn: arn:aws:lambda:us-east-1:000000000000:function:build-document
+
+  - name: save-on-s3
+    arn: arn:aws:lambda:us-east-1:000000000000:function:save-on-s3
+
+  - name: sns-pub
+    arn: arn:aws:lambda:us-east-1:000000000000:function:publish-to-sns
+
+  - name: email-bob
+    arn: arn:aws:lambda:us-east-1:000000000000:function:send-by-email-to-bob
+
+
+# available step types:
+#  - call
+#  - series
+#  - map
+#
+# all of them are synchronous; 'series' will execute N funcs in a loop, buffer
+# the results and then send the aggregated data to the next step
+#
+# if asynchronicity is desired, the user should use a language feature to do so
+# (event-loop on node via promises or python via asyncio, threads on ruby etc)
+assemblies:
+
+  # with a python target, this would generate a module with a function called
+  # 'build_and_save' accepting one parameter (since 'extract-data' accepts input)
+  #
+  # usable like:
+  #
+  # >>> from my_company_funcs import build_and_save
+  # >>> doc_url = build_and_save('some string here')
+  # >>> print(doc_url)
+  # "http://s3.amazonaws.com/my_bucket/my_saved_file"
+  #
+  # note that the meta attribute 'package-name' is transformed from
+  # 'my-company-funcs' to 'my_company_funcs' -- each target dictates the used
+  # style
+  #
+  # on nodejs, this would be the import:
+  #
+  # > const { buildAndSave } from 'my-company-funcs'
+  - name: build-and-save
+    steps:
+      # the simplest possible assembly: 'extract-data' fetches some data and the
+      # result is passed to 'build-doc'; and the same happens again with
+      # 'build-doc' and 'save-on-s3'
+      - call: extract-data
+      - call: build-doc
+      - call: save-on-s3
+
+  # here, the generated function -- 'another_assembly_line' on python -- would
+  # receive two parameters; this amount of parameters is defined by the
+  # 'series' step
+  #
+  # another_assembly_line('parameter for extract-data', 'parameter for extract-data-with-default')
+  #
+  # since 'extract-data-with-default' has a default value, the second parameter
+  # on 'another_assembly_line' can be null or an empty string -- but CANNOT be missing
+  #
+  # another_assembly_line('parameter for extract-data', None)
+  # another_assembly_line('parameter for extract-data', '')
+  #
+  # why? suppose the series is [x, y, z]; where y has a default value but x and z, not
+  # this would not work -- func('lorem', 'ipsum') -- since z expect something
+  #
+  # this would be the appropriate call: func('lorem', '', 'ipsum') -- or func('lorem', None, 'ipsum')
+  - name: another-assembly-line
+    steps:
+      # either all of them accepts inputs or neither
+      # if none accepts inputs, the call would be -- on python -- another_assembly_line()
+      - series: [extract-data, extract-data-with-default]
+
+      # in this scenario, using 'call', 'build-doc' would only be called once
+      # with [result<extract-data>, result<extract-data-with-default>]
+      # - call: build-doc
+
+      # runs 'build-doc' two times -- with the result of each item on 'series'
+      # map acts like the nodejs function -- it transforms an array into another array
+      - map: build-doc
+
+      - map: save-on-s3
+
+      # supposing 'save-on-s3' returns a string -- a S3 object URL -- the
+      # result would be [result<doc-one-url>, result<doc-two-url>]
+      #
+      # in this case, a series from a list would be equivalent of:
+      #   --> sns-pub(doc-one-url)
+      #   --> sns-pub(doc-two-url)
+      #   --> email-bob(doc-one-url)
+      #   --> email-bob(doc-two-url)
+      - series: [sns-pub, email-bob]
