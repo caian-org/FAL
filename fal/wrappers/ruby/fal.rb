@@ -4,13 +4,11 @@ require 'os'
 
 def _get_shared_lib_path
   here = File.dirname(__FILE__)
-  build_dir = File.expand_path(File.join(here, '..', '..', '..', 'build'))
+  lib_path = File.expand_path(File.join(here, '..', '..', 'shared', 'libfal'))
 
   if OS.windows?
-    return File.join(build_dir, 'bin', 'FAL.dll')
+    return lib_path + '.dll'
   end
-
-  lib_path = File.join(build_dir, 'lib', 'libFAL')
 
   if OS.linux?
     return lib_path + '.so'
@@ -28,17 +26,17 @@ module LibWrapper
   extend FFI::Library
   ffi_lib _get_shared_lib_path()
 
-  attach_function 'addAndMultiplies', [:int], :int
-  attach_function 'listS3Buckets', [], :void
+  attach_function '__addAndMultiplies', [:int], :int
+  attach_function '__listS3Buckets', [], :void
 end
 
 
 module MyLib
   def self.add_and_multiplies(value)
-    LibWrapper.addAndMultiplies(value)
+    LibWrapper.__addAndMultiplies(value)
   end
 
   def self.list_s3_buckets
-    LibWrapper.listS3Buckets()
+    LibWrapper.__listS3Buckets()
   end
 end

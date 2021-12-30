@@ -4,13 +4,11 @@ const { promisify } = require('util')
 const { Library } = require('ffi-napi')
 
 function getSharedLibPath () {
-  const buildDir = resolve(__dirname, '..', '..', '..', 'build')
+  const libPath = resolve(__dirname, '..', '..', 'shared', 'libfal')
 
   if (process.platform === 'win32') {
-    return join(buildDir, 'bin', 'FAL.dll')
+    return libPath + '.dll'
   }
-
-  const libPath = join(buildDir, 'lib', 'libFAL')
 
   if (process.platform === 'linux') {
     return libPath + '.so'
@@ -25,19 +23,19 @@ function getSharedLibPath () {
 
 function init () {
   const exportedFunctions = {
-    addAndMultiplies: ['int', ['int']],
-    listS3Buckets: ['void', []]
+    __addAndMultiplies: ['int', ['int']],
+    __listS3Buckets: ['void', []]
   }
 
   const lib = Library(getSharedLibPath(), exportedFunctions)
 
   /* sync */
-  const addAndMultipliesSync = (value) => lib.addAndMultiplies(value)
-  const listS3BucketsSync = () => lib.listS3Buckets()
+  const addAndMultipliesSync = (value) => lib.__addAndMultiplies(value)
+  const listS3BucketsSync = () => lib.__listS3Buckets()
 
   /* async */
-  const addAndMultipliesPromise = promisify(lib.addAndMultiplies.async)
-  const listS3BucketsPromise = promisify(lib.listS3Buckets.async)
+  const addAndMultipliesPromise = promisify(lib.__addAndMultiplies.async)
+  const listS3BucketsPromise = promisify(lib.__listS3Buckets.async)
 
   const addAndMultiplies = async (value) => addAndMultipliesPromise(value)
   const listS3Buckets = async () => listS3BucketsPromise()
