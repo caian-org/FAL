@@ -23,37 +23,57 @@ jobs:
         with:
           node-version: 16.13.x
 
-      - name: Set up Python
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.5
+
+      - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.8.x
 
-      - name: Install C and C++ header files
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gcc-multilib g++-multilib
-        if: matrix.os == 'ubuntu-latest'
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.x
 
-      - name: Install Conan and package tools
-        run: |
-          python3 -m pip install --upgrade pip
-          pip3 install conan
-          pip3 install conan_package_tools
+      - name: Cache Go packages
+        id: cache-go-pkgs
+        uses: actions/cache@v2
+        with:
+          # In order:
+          # * Module download cache
+          # * Build cache (Linux)
+          # * Build cache (Mac)
+          # * Build cache (Windows)
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            %LocalAppData%\go-build
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
 
-      - name: Configure Conan
+      - name: Get dependencies
+        if: steps.cache-go-pkgs.outputs.cache-hit != 'true'
         run: |
-          conan profile new default --detect
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-        if: matrix.os == 'ubuntu-latest'
+          cd fal/shared
+          go get
 
       - name: Build FAL
         run: |
-          make init
-          make build
+          cd fal/shared
+          make release
 
       - name: Install wrappers dependencies
         run: |
           ( cd fal/wrappers/javascript && npm install )
+          ( cd fal/wrappers/ruby && bundle install )
 
       - name: Run tests
-        run: make tests
+        run: |
+          node tests/javascript/index.js
+          ruby tests/ruby/main.rb
+          python3 tests/python/main.py
