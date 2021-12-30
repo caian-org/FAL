@@ -59,13 +59,21 @@ jobs:
       - name: Get dependencies
         if: steps.cache-go-pkgs.outputs.cache-hit != 'true'
         run: |
-          cd fal/shared
-          go get
+          ( cd fal/shared && go get )
 
       - name: Build FAL
         run: |
-          cd fal/shared
-          make release
+          ( cd fal/shared && make release )
+
+          mkdir artifact
+          mv fal/shared/libfal* artifact
+
+      - name: Upload lib
+        uses: actions/upload-artifact@v2
+        with:
+          name: libfal-${{ github.sha }}-${{ matrix.os }}
+          path: artifact
+          retention-days: 1
 
       - name: Install wrappers dependencies
         run: |
