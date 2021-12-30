@@ -24,7 +24,8 @@ func __listS3Buckets() {
 
 	result, err := client.ListBuckets(ctx, &params)
 	if err != nil {
-		panic(err)
+		fmt.Printf("%s\n", err)
+		return
 	}
 
 	fmt.Printf("Found %d buckets\n", len(result.Buckets))
