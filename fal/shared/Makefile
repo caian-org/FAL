@@ -15,8 +15,6 @@ ifneq ($(OS),Windows_NT)
 
 	ifeq ($(UNAME),Darwin)
 		EXT = dylib
-	else
-		$(error Unsupported system)
 	endif
 endif
 
