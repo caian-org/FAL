@@ -52,18 +52,30 @@ jobs:
             ~/.cache/go-build
             ~/Library/Caches/go-build
             %LocalAppData%\go-build
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ matrix.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-
+            ${{ matrix.os }}-go-
 
-      - name: Get dependencies
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ matrix.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ matrix.os }}-node-
+
+      - name: Get Go dependencies
         if: steps.cache-go-pkgs.outputs.cache-hit != 'true'
         run: |
-          ( cd fal/shared && go get )
+          cd fal/shared
+          go get
 
       - name: Build FAL
         run: |
-          ( cd fal/shared && make release )
+          cd fal/shared
+          make release
 
       - name: Upload lib
         uses: actions/upload-artifact@v2
@@ -72,10 +84,16 @@ jobs:
           path: fal/shared/libfal
           retention-days: 1
 
-      - name: Install wrappers dependencies
+      - name: Install JS wrapper dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: |
-          ( cd fal/wrappers/javascript && npm install )
-          ( cd fal/wrappers/ruby && bundle install )
+          cd fal/wrappers/javascript
+          npm install
+
+      - name: Install Ruby wrapper dependencies
+        run: |
+          cd fal/wrappers/ruby
+          bundle install
 
       - name: Run tests
         run: |
