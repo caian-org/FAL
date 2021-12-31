@@ -1,7 +1,7 @@
 import platform
 
 from ctypes import CDLL
-from ctypes import c_int
+from ctypes import c_char_p
 
 from os.path import abspath
 from os.path import dirname
@@ -9,7 +9,7 @@ from os.path import realpath
 from os.path import join
 
 
-def get_shared_lib_path():
+def _get_shared_lib_path():
     kernel = platform.system()
     lib_path = abspath(join(dirname(realpath(__file__)), '..', '..', 'shared', 'libfal'))
 
@@ -26,13 +26,20 @@ def get_shared_lib_path():
 
 
 def init():
-    lib = CDLL(get_shared_lib_path())
-    lib.__addAndMultiplies.argtypes = [c_int]
+    lib = CDLL(_get_shared_lib_path())
 
-    def add_and_multiples(num):
-        return lib.__addAndMultiplies(num)
+    lib.__FAL_stringFuncCall.argtypes = [c_char_p]
+    lib.__FAL_stringFuncCall.restype = c_char_p
+
+    lib.__FAL_listS3Buckets.argtypes = []
+    lib.__FAL_listS3Buckets.restype = c_char_p
+
+    def string_func_call(value):
+        c_string_input = c_char_p(value.encode('UTF-8'))
+        c_string_output = lib.__FAL_stringFuncCall(c_string_input)
+        return c_string_output.decode('UTF-8')
 
     def list_s3_buckets():
-        return lib.__listS3Buckets()
+        return lib.__FAL_listS3Buckets().decode('UTF-8')
 
-    return add_and_multiples, list_s3_buckets
+    return string_func_call, list_s3_buckets

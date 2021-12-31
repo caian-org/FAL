@@ -26,17 +26,17 @@ module LibWrapper
   extend FFI::Library
   ffi_lib _get_shared_lib_path()
 
-  attach_function '__addAndMultiplies', [:int], :int
-  attach_function '__listS3Buckets', [], :void
+  attach_function '__FAL_stringFuncCall', [:string], :string
+  attach_function '__FAL_listS3Buckets', [], :string
 end
 
 
 module MyLib
-  def self.add_and_multiplies(value)
-    LibWrapper.__addAndMultiplies(value)
+  def self.string_func_call(value)
+    LibWrapper.__FAL_stringFuncCall(value)
   end
 
   def self.list_s3_buckets
-    LibWrapper.__listS3Buckets()
+    LibWrapper.__FAL_listS3Buckets()
   end
 end

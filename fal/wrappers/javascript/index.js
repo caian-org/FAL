@@ -23,24 +23,29 @@ function getSharedLibPath () {
 
 function init () {
   const exportedFunctions = {
-    __addAndMultiplies: ['int', ['int']],
-    __listS3Buckets: ['void', []]
+    __FAL_stringFuncCall: ['string', ['string']],
+    __FAL_listS3Buckets: ['string', []]
   }
 
   const lib = Library(getSharedLibPath(), exportedFunctions)
 
   /* sync */
-  const addAndMultipliesSync = (value) => lib.__addAndMultiplies(value)
-  const listS3BucketsSync = () => lib.__listS3Buckets()
+  const stringFuncCallSync = (value) => lib.__FAL_stringFuncCall(value)
+  const listS3BucketsSync = () => lib.__FAL_listS3Buckets()
 
   /* async */
-  const addAndMultipliesPromise = promisify(lib.__addAndMultiplies.async)
-  const listS3BucketsPromise = promisify(lib.__listS3Buckets.async)
+  const stringFuncCallPromise = promisify(lib.__FAL_stringFuncCall.async)
+  const listS3BucketsPromise = promisify(lib.__FAL_listS3Buckets.async)
 
-  const addAndMultiplies = async (value) => addAndMultipliesPromise(value)
-  const listS3Buckets = async () => listS3BucketsPromise()
+  const stringFuncCall = async (value) => await stringFuncCallPromise(value)
+  const listS3Buckets = async () => await listS3BucketsPromise()
 
-  return { addAndMultiplies, addAndMultipliesSync, listS3Buckets, listS3BucketsSync }
+  return {
+    stringFuncCall,
+    stringFuncCallSync,
+    listS3Buckets,
+    listS3BucketsSync
+  }
 }
 
 module.exports = { init }
