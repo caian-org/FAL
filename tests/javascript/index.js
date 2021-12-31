@@ -2,17 +2,23 @@ const fal = require('../../fal/wrappers/javascript')
 const myLib = fal.init()
 
 async function asyncTest () {
-  console.log('async main; first you should see the number, then the bucket list\n')
+  console.log('async main\n'.toUpperCase())
 
-  myLib.listS3Buckets()
-  myLib.addAndMultiplies(3).then((result) => console.log(result))
+  const a = await myLib.stringFuncCall("Hello from JS")
+  const b = await myLib.listS3Buckets()
+
+  console.log(a)
+  console.log(b)
 }
 
 function syncTest () {
-  console.log('sync main; first you should see the bucket list, then the number\n')
+  console.log('sync main\n'.toUpperCase())
 
-  myLib.listS3BucketsSync()
-  console.log(myLib.addAndMultipliesSync(3))
+  console.log(myLib.listS3BucketsSync())
+  console.log(myLib.stringFuncCallSync("Hello from JS"))
 }
 
+console.log('--- javascript test ---\n')
+
 asyncTest()
+  .then(() => syncTest())

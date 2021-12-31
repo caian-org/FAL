@@ -16,11 +16,13 @@ def import_fal():
 
 
 def main():
-    fal = import_fal()
-    add_and_multiples, list_s3_buckets = fal.init()
+    print('--- python test ---\n')
 
-    list_s3_buckets()
-    print(add_and_multiples(3))
+    fal = import_fal()
+    string_func_call, list_s3_buckets = fal.init()
+
+    print(string_func_call('Hello from Python!'))
+    print(list_s3_buckets())
 
 
 if __name__ == '__main__':
