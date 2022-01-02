@@ -22,9 +22,9 @@ func (c *cmdBuild) Run() error {
 		return err
 	}
 
-    for _, f := range config.Functions {
-        fmt.Printf("%s | %s\n", f.Arn, f.Name)
-    }
+	for _, f := range config.Functions {
+		fmt.Printf("%s | %s\n", f.Arn, f.Name)
+	}
 
 	return nil
 }
