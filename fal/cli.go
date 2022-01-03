@@ -10,7 +10,9 @@ type baseCmd struct {
 	Path    string `arg:"" name:"path" type:"path" help:"The FAL project location."`
 }
 
-// ------- CMD: Build -------
+////////////////////////
+///    CMD: Build    ///
+////////////////////////
 
 type cmdBuild struct {
 	baseCmd
@@ -29,7 +31,9 @@ func (c *cmdBuild) Run() error {
 	return nil
 }
 
-// ------- CMD: Create -------
+/////////////////////////
+///    CMD: Create    ///
+/////////////////////////
 
 type cmdCreate struct {
 	baseCmd
@@ -40,7 +44,9 @@ func (c *cmdCreate) Run() error {
 	return nil
 }
 
-// ------- CMD: Review -------
+/////////////////////////
+///    CMD: Review    ///
+/////////////////////////
 
 type cmdReview struct {
 	baseCmd
@@ -57,7 +63,9 @@ func (c *cmdReview) Run() error {
 	return nil
 }
 
-// ------- CMD: Version -------
+//////////////////////////
+///    CMD: Version    ///
+//////////////////////////
 
 type cmdVersion struct{}
 
@@ -66,7 +74,7 @@ func (c *cmdVersion) Run() error {
 	return nil
 }
 
-// >>> CLI parser
+// ~~~ Main struct and parser func
 
 var cli struct {
 	Version cmdVersion `cmd:"" help:"Show version information."`

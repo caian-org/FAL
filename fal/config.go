@@ -6,7 +6,9 @@ import (
 	"path/filepath"
 )
 
-// ------- SECT: Meta -------
+////////////////////////
+///    SECT: Meta    ///
+////////////////////////
 
 type metaPackage struct {
 	Name        string `yaml:"name"`
@@ -19,7 +21,9 @@ type sectMeta struct {
 	Package metaPackage `yaml:"package"`
 }
 
-// ------- SECT: Functions -------
+/////////////////////////////
+///    SECT: Functions    ///
+/////////////////////////////
 
 type cacheStrategy struct {
 	Filesystem           string `yaml:"filesystem"`
@@ -50,7 +54,9 @@ type sectFunctions struct {
 	With funcOptions `yaml:"with,omitempty"`
 }
 
-// ------- SECT: Assemblies -------
+//////////////////////////////
+///    SECT: Assemblies    ///
+//////////////////////////////
 
 type assemblySteps struct {
 	Call string `yaml:"call"`
@@ -61,7 +67,7 @@ type sectAssemblies struct {
 	Steps []assemblySteps `yaml:"steps"`
 }
 
-// >>> FAL Config
+// ~~~ Main struct and load func
 
 type FALConfig struct {
 	Meta       sectMeta         `yaml:"meta"`
