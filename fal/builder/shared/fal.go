@@ -11,6 +11,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
+func main() {}
+
 func callWrapper(action func() string) *C.char {
 	return C.CString(action())
 }
@@ -59,5 +61,3 @@ func __FAL_listS3Buckets() *C.char {
 		},
 	)
 }
-
-func main() {}
