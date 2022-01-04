@@ -11,12 +11,13 @@ type Build struct {
 }
 
 func (c *Build) Run() error {
-	config, err := c.GetConfig()
+	rootpath := util.NewLocation(c.Path)
+	config, err := c.GetConfig(rootpath)
 	if err != nil {
 		return err
 	}
 
-	buildDir := util.NewLocation(c.Path).InnerLevel("build")
+	buildDir := rootpath.InnerLevel("build")
 	err = buildDir.CreateDir()
 	if err != nil {
 		return err

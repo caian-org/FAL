@@ -2,6 +2,7 @@ package command
 
 import (
 	"fal/cli/command/base"
+	"fal/util"
 	"fmt"
 )
 
@@ -10,7 +11,8 @@ type Review struct {
 }
 
 func (c *Review) Run() error {
-	config, err := c.GetConfig()
+	rootpath := util.NewLocation(c.Path)
+	config, err := c.GetConfig(rootpath)
 	if err != nil {
 		return err
 	}
