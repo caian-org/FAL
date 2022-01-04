@@ -1,5 +1,7 @@
 package main
 
+import "fal/cli"
+
 func main() {
-	CliParserAndRun()
+	cli.ParseAndRun()
 }

@@ -1,14 +1,6 @@
-package main
+package config
 
-import (
-	"gopkg.in/yaml.v2"
-	"os"
-	"path/filepath"
-)
-
-////////////////////////
-///    SECT: Meta    ///
-////////////////////////
+// ~~~ meta
 
 type metaPackage struct {
 	Name        string `yaml:"name"`
@@ -21,9 +13,7 @@ type sectMeta struct {
 	Package metaPackage `yaml:"package"`
 }
 
-/////////////////////////////
-///    SECT: Functions    ///
-/////////////////////////////
+// ~~~ functions
 
 type cacheStrategy struct {
 	Filesystem           string `yaml:"filesystem"`
@@ -54,9 +44,7 @@ type sectFunctions struct {
 	With funcOptions `yaml:"with,omitempty"`
 }
 
-//////////////////////////////
-///    SECT: Assemblies    ///
-//////////////////////////////
+// ~~~ assemblies
 
 type assemblySteps struct {
 	Call string `yaml:"call"`
@@ -65,29 +53,4 @@ type assemblySteps struct {
 type sectAssemblies struct {
 	Name  string          `yaml:"name"`
 	Steps []assemblySteps `yaml:"steps"`
-}
-
-// ~~~ Main struct and load func
-
-type FALConfig struct {
-	Meta       sectMeta         `yaml:"meta"`
-	Targets    []string         `yaml:"targets"`
-	Functions  []sectFunctions  `yaml:"functions"`
-	Assemblies []sectAssemblies `yaml:"assemblies"`
-}
-
-func LoadConfig(projpath string) (*FALConfig, error) {
-	configFile := filepath.Join(projpath, ".fal.yml")
-	configData, err := os.ReadFile(configFile)
-	if err != nil {
-		return nil, err
-	}
-
-	config := FALConfig{}
-	err = yaml.Unmarshal(configData, &config)
-	if err != nil {
-		return nil, err
-	}
-
-	return &config, nil
 }
