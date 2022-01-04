@@ -1,27 +1,23 @@
 package config
 
 import (
+	"fal/util"
 	"gopkg.in/yaml.v2"
-	"os"
-	"path/filepath"
 )
 
-type FALConfig struct {
-	Meta       sectMeta         `yaml:"meta"`
-	Targets    []string         `yaml:"targets"`
-	Functions  []sectFunctions  `yaml:"functions"`
-	Assemblies []sectAssemblies `yaml:"assemblies"`
-}
-
-func Load(projpath string) (*FALConfig, error) {
-	cfile := filepath.Join(projpath, ".fal.yml")
-	cdata, err := os.ReadFile(cfile)
+func LoadAndValidate(rootpath *util.Location) (*FALConfig, error) {
+	data, err := rootpath.ReadFile(".fal.yml")
 	if err != nil {
 		return nil, err
 	}
 
 	config := FALConfig{}
-	err = yaml.Unmarshal(cdata, &config)
+	err = yaml.Unmarshal(data, &config)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validateSchema(&config)
 	if err != nil {
 		return nil, err
 	}
