@@ -34,6 +34,8 @@ targets:
   # at least one option must be provided; if an unknown option or none is
   # provided, FAL will fail
   - python
+  - ruby
+  - javascript
 
 
 # -------------------------------------------
