@@ -33,7 +33,7 @@ func InitSharedLib(buildDir *util.Location) error {
 		"Makefile": _libfal_make,
 	}
 
-    _, err = wd.CreateManyFiles(f)
+	_, err = wd.CreateManyFiles(f)
 	if err != nil {
 		return err
 	}
