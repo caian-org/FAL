@@ -1,16 +1,17 @@
-package cli
+package command
 
 import (
 	"fal/builder"
+	"fal/cli/command/base"
 	"fal/util"
 )
 
-type cmdBuild struct {
-	baseCmd
+type Build struct {
+	base.Command
 }
 
-func (c *cmdBuild) Run() error {
-	config, err := c.getConfig()
+func (c *Build) Run() error {
+	config, err := c.GetConfig()
 	if err != nil {
 		return err
 	}

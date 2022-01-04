@@ -1,14 +1,15 @@
 package cli
 
 import (
+	"fal/cli/command"
 	"github.com/alecthomas/kong"
 )
 
 var cli struct {
-	Version cmdVersion `cmd:"" help:"Show version information."`
-	Build   cmdBuild   `cmd:"" help:"Do something."`
-	Create  cmdCreate  `cmd:"" help:"Do something else."`
-	Review  cmdReview  `cmd:"" help:"Do another something."`
+	Version command.Version `cmd:"" help:"Show version information."`
+	Build   command.Build   `cmd:"" help:"Do something."`
+	Create  command.Create  `cmd:"" help:"Do something else."`
+	Review  command.Review  `cmd:"" help:"Do another something."`
 }
 
 func ParseAndRun() {
