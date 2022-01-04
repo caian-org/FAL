@@ -64,3 +64,8 @@ func (c Location) CreateManyFiles(files FileList) ([]string, error) {
 
 	return created, nil
 }
+
+func (c Location) ReadFile(filename string) ([]byte, error) {
+	f := c.join(filename)
+	return os.ReadFile(f)
+}
