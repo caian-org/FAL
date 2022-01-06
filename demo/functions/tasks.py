@@ -83,6 +83,8 @@ class NodeProject(Command):
         if self._has('package.json') and self._has('package-lock.json'):
             self.run('npm install')
 
+        return self
+
 
 # ~~~~
 class GradleProject(Command):
@@ -119,10 +121,20 @@ class RubyProject(Command):
         return self
 
 
+class GoProject(Command):
+    def go_prepare(self):
+        if self._has('go.mod') and self._has('go.sum'):
+            self.run('go get')
+            self.run('GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/handler handler.go')
+            self.run('upx --best --lzma bin/handler')
+
+        return self
+
+
 # ~~~~
-class Project(NodeProject, GradleProject, DotNetProject, RubyProject):
+class Project(NodeProject, GradleProject, DotNetProject, RubyProject, GoProject):
     def prepare(self):
-        self.gradle_prepare().dotnet_prepare().ruby_prepare().npm_prepare()
+        self.gradle_prepare().dotnet_prepare().ruby_prepare().npm_prepare().go_prepare()
 
         return self
 
