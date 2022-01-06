@@ -1,0 +1,15 @@
+service: divide-by
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  stage: test
+  runtime: dotnetcore3.1
+  lambdaHashingVersion: 20201221
+
+package:
+  artifact: package.zip
+
+functions:
+  handler:
+    handler: FAL::Calc.DivideBy::run
