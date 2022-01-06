@@ -66,9 +66,6 @@ class Command:
 
         return self
 
-
-# ~~~~
-class NodeProject(Command):
     def npx(self, cmd):
         self.run(f'npx {cmd}')
 
@@ -81,8 +78,15 @@ class NodeProject(Command):
 
 
 # ~~~~
+class NodeProject(Command):
+    def npm_prepare(self):
+        if self._has('package.json') and self._has('package-lock.json'):
+            self.run('npm install')
+
+
+# ~~~~
 class GradleProject(Command):
-    def gradle_build(self):
+    def gradle_prepare(self):
         if self._has('build.gradle') and self._has('gradlew'):
             self.run('gradle wrapper')
             self.run('./gradlew build')
@@ -92,7 +96,7 @@ class GradleProject(Command):
 
 # ~~~~
 class DotNetProject(Command):
-    def dotnet_build(self):
+    def dotnet_prepare(self):
         if self._has_ext('.fsproj'):
             fw = '--framework netcoreapp3.1'
 
@@ -105,7 +109,7 @@ class DotNetProject(Command):
 
 # ~~~~
 class RubyProject(Command):
-    def ruby_build(self):
+    def ruby_prepare(self):
         if self._has('Gemfile') and self._has('Gemfile.lock'):
             self.run('bundle config set --local path vendor')
             self.run('bundle install')
@@ -117,15 +121,15 @@ class RubyProject(Command):
 
 # ~~~~
 class Project(NodeProject, GradleProject, DotNetProject, RubyProject):
-    def build(self):
-        self.gradle_build().dotnet_build().ruby_build()
+    def prepare(self):
+        self.gradle_prepare().dotnet_prepare().ruby_prepare().npm_prepare()
 
         return self
 
 
 # ~~~~
 def _base_task(c, path, sc):
-    Project(c, path).build().serverless(sc)
+    Project(c, path).prepare().serverless(sc)
 
 
 @task
