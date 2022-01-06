@@ -99,7 +99,7 @@ class GradleProject(Command):
 # ~~~~
 class DotNetProject(Command):
     def dotnet_prepare(self):
-        if self._has_ext('.fsproj'):
+        if self._has_ext('.fsproj') or self._has_ext('.csproj'):
             fw = '--framework netcoreapp3.1'
 
             self.run('dotnet restore')

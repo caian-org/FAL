@@ -1,11 +1,11 @@
 using Amazon.Lambda.Core;
 
 [assembly:LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
-namespace AwsDotnetCsharp
+namespace S3Writer
 {
     public class Handler
     {
-       public Response Hello(Request request)
+       public Response Run(Request request)
        {
            return new Response("Go Serverless v1.0! Your function executed successfully!", request);
        }
