@@ -1,0 +1,20 @@
+service: build-document
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  stage: test
+  runtime: ruby2.7
+  lambdaHashingVersion: 20201221
+
+package:
+  exclude:
+    - '*/**'
+  include:
+    - handler.rb
+    - builder/**
+    - lib/**
+
+functions:
+  handler:
+    handler: handler.build_document
