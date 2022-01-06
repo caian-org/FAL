@@ -1,0 +1,15 @@
+service: fal
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  stage: test
+  runtime: java8
+  lambdaHashingVersion: 20201221
+
+package:
+  artifact: build/distributions/plusone.zip
+
+functions:
+  plus-one:
+    handler: com.plusone.Handler

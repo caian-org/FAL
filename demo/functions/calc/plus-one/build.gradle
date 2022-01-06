@@ -1,0 +1,31 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    api (
+        'com.amazonaws:aws-lambda-java-core:1.2.1',
+        'com.amazonaws:aws-lambda-java-log4j:1.0.1',
+        'com.fasterxml.jackson.core:jackson-core:2.11.0',
+        'com.fasterxml.jackson.core:jackson-databind:2.11.0',
+        'com.fasterxml.jackson.core:jackson-annotations:2.11.0'
+    )
+}
+
+task buildZip(type: Zip) {
+    archiveBaseName = "plusone"
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+build.dependsOn buildZip
