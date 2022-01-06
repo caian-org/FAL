@@ -6,6 +6,14 @@ provider:
   stage: test
   runtime: go1.x
   lambdaHashingVersion: 20201221
+  memorySize: 128
+  timeout: 10
+  deploymentBucket:
+    name: fal-demo-functions-packages
+    serverSideEncryption: AES256
+
+plugins:
+  - serverless-deployment-bucket
 
 package:
   exclude:

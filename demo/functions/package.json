@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "serverless": "^2.70.0"
+    "serverless": "^2.70.0",
+    "serverless-deployment-bucket": "^1.5.1"
   },
   "name": "function-deployer"
 }
