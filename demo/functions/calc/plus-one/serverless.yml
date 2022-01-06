@@ -1,4 +1,4 @@
-service: fal
+service: plus-one
 frameworkVersion: '2'
 
 provider:
@@ -11,5 +11,5 @@ package:
   artifact: build/distributions/plusone.zip
 
 functions:
-  plus-one:
+  handler:
     handler: com.plusone.Handler
