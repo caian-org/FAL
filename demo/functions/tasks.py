@@ -4,16 +4,20 @@ from os.path import exists
 
 from invoke import task
 
-BRIGHT = ''
+CYAN = ''
+DIM = ''
 RESET_ALL = ''
+
 COUNTER = 0
 
 try:
     from colorama import init
     from colorama import Style
+    from colorama import Fore
 
     init()
-    BRIGHT = Style.BRIGHT
+    CYAN = Fore.CYAN
+    DIM = Style.DIM
     RESET_ALL = Style.RESET_ALL
 
 except ModuleNotFoundError:
@@ -47,19 +51,19 @@ class Command:
         _cmd = cmd
         preffix = f'~~~ {COUNTER}. '
 
-        print('\n' + BRIGHT + preffix, end='')
+        # ...
+        print('\n' + DIM + preffix + 'Running', end='')
 
         if self.pwd is not None:
-            print(f'Changing directory to "{self.pwd}"')
-            print(' ' * len(preffix), end='')
-
+            print(f' @ "{self.pwd}"', end='')
             cmd = f'cd {self.pwd} && {cmd}'
 
-        print('Running:')
-        print(' ' * (len(preffix) + 2), end='')
-        print(cmd + RESET_ALL + '\n')
+        print(RESET_ALL)
 
+        # ...
+        print(CYAN + ' ' * (len(preffix) + 2) + '$ ' + _cmd + RESET_ALL + '\n')
         self.c.run(cmd, **kwargs)
+
         return self
 
 
@@ -67,10 +71,12 @@ class Command:
 class NodeProject(Command):
     def npx(self, cmd):
         self.run(f'npx {cmd}')
+
         return self
 
     def serverless(self, cmd):
         self.npx(f'serverless {cmd}')
+
         return self
 
 
@@ -88,29 +94,38 @@ class GradleProject(Command):
 class DotNetProject(Command):
     def dotnet_build(self):
         if self._has_ext('.fsproj'):
+            fw = '--framework netcoreapp3.1'
+
             self.run('dotnet restore')
-            self.run('dotnet tool install -g Amazon.Lambda.Tools --framework netcoreapp3.1', warn=True)
-            self.run('dotnet lambda package --configuration Release --framework netcoreapp3.1 --output-package package.zip')
+            self.run(f'dotnet tool install -g Amazon.Lambda.Tools {fw}', warn=True)
+            self.run(f'dotnet lambda package --configuration Release {fw} --output-package package.zip')
 
         return self
 
 
 # ~~~~
-class MultiLangProject(NodeProject, GradleProject, DotNetProject):
+class RubyProject(Command):
+    def ruby_build(self):
+        if self._has('Gemfile') and self._has('Gemfile.lock'):
+            self.run('bundle config set --local path vendor')
+            self.run('bundle install')
+            self.run('rm -rf lib && mkdir -p lib')
+            self.run('cp -r vendor/ruby/*/gems/* lib', warn=True)
+
+        return self
+
+
+# ~~~~
+class Project(NodeProject, GradleProject, DotNetProject, RubyProject):
     def build(self):
-        self.gradle_build()
-        self.dotnet_build()
+        self.gradle_build().dotnet_build().ruby_build()
 
         return self
 
 
 # ~~~~
 def _base_task(c, path, sc):
-    (
-        MultiLangProject(c, pwd=path)
-            .build()
-            .serverless(sc)
-    )
+    Project(c, path).build().serverless(sc)
 
 
 @task
@@ -119,5 +134,10 @@ def deploy(c, path):
 
 
 @task
+def package(c, path):
+    _base_task(c, path, 'package')
+
+
+@task
 def remove(c, path):
-    MultiLangProject(c, pwd=path).serverless('remove')
+    Project(c, path).serverless('remove')
