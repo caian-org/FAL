@@ -1,0 +1,12 @@
+service: power-of
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  stage: test
+  runtime: python3.8
+  lambdaHashingVersion: 20201221
+
+functions:
+  handler:
+    handler: handler.power_of
