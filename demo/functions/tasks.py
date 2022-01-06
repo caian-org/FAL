@@ -157,3 +157,8 @@ def package(c, path):
 @task
 def remove(c, path):
     Project(c, path).serverless('remove')
+
+
+@task
+def call(c, path):
+    Project(c, path).serverless('invoke --function handler')
