@@ -4,7 +4,7 @@ frameworkVersion: '2'
 provider:
   name: aws
   stage: test
-  runtime: java8
+  runtime: java11
   lambdaHashingVersion: 20201221
 
 package:
