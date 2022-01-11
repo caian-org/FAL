@@ -5,14 +5,32 @@ open Amazon.Lambda.Core
 do ()
 
 [<CLIMutable>]
-type Request = { Key1 : string; Key2 : string; Key3 : string }
-type Response = { Message : string; Request : Request }
+type Request = { _fal: string }
+type ReqInput = { input: string }
+
+type Response = { _fal: string }
+type ResOutput = { mutable success: bool; mutable output: string }
+
 
 module DivideBy =
     open System
     open System.IO
     open System.Text
+    open FSharp.Json
 
-    let run(request:Request) =
-        { Message="Go Serverless v1.0! Your function executed successfully!"
-          Request=request }
+    let run(request: Request) =
+        printfn "Got event: %A" request
+
+        let res: ResOutput = { success = false; output = null }
+
+        try
+            let fal = Json.deserialize<ReqInput> request._fal
+            let input = int fal.input
+
+            res.success <- true
+            res.output <- string (input / 2)
+
+        with :? System.FormatException as ex ->
+            printfn "Could not perform operation: %s" ex.Message
+
+        { _fal = Json.serializeU res }
