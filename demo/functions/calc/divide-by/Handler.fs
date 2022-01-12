@@ -7,17 +7,17 @@ do ()
 
 [<CLIMutable>]
 type Request =
-    { _fal: string }
+    { _fal : string }
 
 type Response =
-    { _fal: string }
+    { _fal : string }
 
 type ReqInput =
-    { input: string }
+    { input : string }
 
 type ResOutput =
-    { mutable success: bool;
-      mutable output: string }
+    { mutable success : bool;
+      mutable output : string }
 
 type KeyNotFound = System.Collections.Generic.KeyNotFoundException
 
@@ -28,12 +28,12 @@ module DivideBy =
     open System.Text
     open FSharp.Json
 
-    let run(request: Request) =
+    let run(request : Request) =
         printfn "Got event: %A" request
 
         let res : ResOutput =
             { success = false;
-              output = null }
+              output = "" }
 
         try
             if (request._fal = null)

@@ -13,7 +13,7 @@ public class Handler implements RequestHandler<Map<String, String>, Response>
     {
         return Response.builder()
             .setSuccess(output != null)
-            .setOutput(output)
+            .setOutput(output == null ? "" : output)
             .build();
     }
 
