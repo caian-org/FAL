@@ -8,22 +8,23 @@ def response(output):
         'output': str(output or '')
     }
 
-    return { '_fal': json.dumps(_fal, separators=(',', ':')) }
+    return {'_fal': json.dumps(_fal, separators=(',', ':'))}
 
 
 def power_of(event, context):
     print('Got event: ' + pprint.pformat(event))
-
-    if not event.get('_fal'):
-        return response(None)
+    fal_key = '_fal'
 
     try:
-        fal = json.loads(event['_fal'])
+        if not event.get(fal_key):
+            raise KeyError(f'Event is missing "{fal_key}" property')
+
+        fal = json.loads(event[fal_key])
         fal_input = int(fal['input'])
 
         return response(pow(fal_input, 2))
 
-    except (TypeError, ValueError) as err:
+    except Exception as err:
         print('Could not perform operation: ' + str(err))
 
     return response(None)
