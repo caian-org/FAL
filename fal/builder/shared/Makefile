@@ -18,7 +18,7 @@ ifneq ($(OS),Windows_NT)
 	endif
 endif
 
-LIBFILENAME = libfal.$(EXT)
+LIBFILENAME = $(ARTIFACT).$(EXT)
 
 build:
 	go build $(LDFLAGS) -o $(LIBFILENAME) -buildmode=$(BUILDMODE) .
@@ -27,6 +27,7 @@ release: LDFLAGS = -ldflags "-w -s"
 release: build
 	@cp $(LIBFILENAME) $(ARTIFACT)
 
-binary: ARTIFACT = fal
 binary: BUILDMODE = exe
+binary: ARTIFACT = fal
+binary: LIBFILENAME = fal
 binary: build
