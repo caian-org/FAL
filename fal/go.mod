@@ -3,7 +3,7 @@ module fal
 go 1.17
 
 require (
-	github.com/alecthomas/kong v0.2.22
+	github.com/alecthomas/kong v0.3.0
 	github.com/qri-io/jsonschema v0.2.1
 	gopkg.in/yaml.v2 v2.4.0
 )
