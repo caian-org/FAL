@@ -2,7 +2,7 @@ module notify-email
 
 go 1.17
 
-require github.com/aws/aws-lambda-go v1.27.1
+require github.com/aws/aws-lambda-go v1.28.0
 
 require (
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
