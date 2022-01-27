@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-// import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class Handler implements RequestHandler<Map<String, String>, Response>
 {
