@@ -1,11 +1,10 @@
 service: divide-by
-frameworkVersion: '2'
+frameworkVersion: '3'
 
 provider:
   name: aws
   stage: test
   runtime: dotnetcore3.1
-  lambdaHashingVersion: 20201221
   memorySize: 128
   timeout: 10
   deploymentBucket:
