@@ -6,18 +6,7 @@ open Amazon.Lambda.Core
 do ()
 
 [<CLIMutable>]
-type Request =
-    { _fal : string }
-
-type Response =
-    { _fal : string }
-
-type ReqInput =
-    { input : string }
-
-type ResOutput =
-    { mutable success : bool;
-      mutable output : string }
+type Request = { _fal : string }
 
 type KeyNotFound = System.Collections.Generic.KeyNotFoundException
 
@@ -26,25 +15,14 @@ module DivideBy =
     open System
     open System.IO
     open System.Text
-    open FSharp.Json
 
-    let run(request : Request) =
-        printfn "Got event: %A" request
+    let run(req : Request) =
+        printfn "Got event: %A" req
 
-        let res : ResOutput =
-            { success = false;
-              output = "" }
+        if (req._fal = null)
+            then raise (KeyNotFound("Event is missing \"_fal\" property"))
 
-        try
-            if (request._fal = null)
-                then raise (KeyNotFound("Event is missing \"_fal\" property"))
+        let input = int req._fal
+        let output = string(input / 2)
 
-            let fal = Json.deserialize<ReqInput> request._fal
-            let input = int fal.input
-
-            res.success <- true
-            res.output <- string(input / 2)
-        with
-        | ex -> printfn "Could not perform operation: %s" ex.Message
-
-        { _fal = Json.serializeU res }
+        { _fal = output }
