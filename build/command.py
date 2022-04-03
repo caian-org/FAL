@@ -75,10 +75,6 @@ class Command:
         self.run(f'upx --best --lzma {file}')
         return self
 
-    def pnpx(self, cmd):
-        self.run(f'pnpx {cmd}')
-        return self
-
     def serverless(self, cmd):
-        self.pnpx(f'serverless {cmd}')
+        self.run(f'serverless {cmd}')
         return self
