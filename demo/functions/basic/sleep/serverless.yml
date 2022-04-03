@@ -1,0 +1,22 @@
+service: sleep
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  stage: test
+  runtime: dotnet6
+  memorySize: 128
+  timeout: 20
+  deploymentBucket:
+    name: fal-demo-functions-packages
+    serverSideEncryption: AES256
+
+plugins:
+  - serverless-deployment-bucket
+
+package:
+  artifact: package.zip
+
+functions:
+  handler:
+    handler: FAL::Basic.Sleep::Run
