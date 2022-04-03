@@ -3,6 +3,7 @@ package command
 import (
 	"fal/cli/command/base"
 	"fal/shared/fs"
+	"fal/shared/log"
 	"fal/wrapper"
 )
 
@@ -11,6 +12,9 @@ type Build struct {
 }
 
 func (c *Build) Run() error {
+	log.Init(c.Verbose)
+	log.DebugF("Build routine started", log.Fields{"path": c.Path})
+
 	rootlevel := fs.NewLocation(c.Path)
 	config, err := c.GetConfig(rootlevel)
 	if err != nil {
