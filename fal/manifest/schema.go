@@ -1,4 +1,4 @@
-package config
+package manifest
 
 // ~~~ meta
 
@@ -55,9 +55,9 @@ type sectAssemblies struct {
 	Steps []assemblySteps `yaml:"steps" json:"steps"`
 }
 
-// ~~~ root config object
+// ~~~ root manifest object
 
-type FALConfig struct {
+type FALManifest struct {
 	Meta       sectMeta         `yaml:"meta" json:"meta"`
 	Targets    []string         `yaml:"targets" json:"targets"`
 	Functions  []sectFunctions  `yaml:"functions" json:"functions"`

@@ -1,4 +1,4 @@
-package config
+package manifest
 
 import (
 	"context"
@@ -32,19 +32,19 @@ func getSchema() (*schema, error) {
 	return s, nil
 }
 
-func validateSchema(config *FALConfig) error {
+func validateSchema(manifest *FALManifest) error {
 	s, err := getSchema()
 	if err != nil {
 		return err
 	}
 
 	ctx := context.Background()
-	configEncoded, err := json.Marshal(config)
+	manifestEncoded, err := json.Marshal(manifest)
 	if err != nil {
 		return err
 	}
 
-	if errs, _ := s.ValidateBytes(ctx, configEncoded); len(errs) > 0 {
+	if errs, _ := s.ValidateBytes(ctx, manifestEncoded); len(errs) > 0 {
 		errorList := []string{}
 		for i, err := range errs {
 			errorList = append(errorList, formatJsonSchemaError(i+1, err))
