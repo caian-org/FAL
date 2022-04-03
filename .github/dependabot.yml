@@ -6,37 +6,63 @@ updates:
     schedule:
       interval: daily
 
-  - package-ecosystem: npm
-    directory: /
+  - package-ecosystem: gomod
+    directory: /fal
     schedule:
       interval: daily
 
-  - package-ecosystem: pip
-    directory: /
+  # .....
+
+  - package-ecosystem: npm
+    directory: /fal/builder/wrapper/javascript
     schedule:
       interval: daily
 
   - package-ecosystem: bundler
-    directory: /
+    directory: /fal/builder/wrapper/ruby
+    schedule:
+      interval: daily
+
+  - package-ecosystem: pip
+    directory: /fal/builder/wrapper/python
+    schedule:
+      interval: daily
+
+  # .....
+
+  - package-ecosystem: bundler
+    directory: /demo/functions/doc-pipe/build-document
     schedule:
       interval: daily
 
   - package-ecosystem: gomod
-    directory: /
+    directory: /demo/functions/doc-pipe/notify-email
     schedule:
       interval: daily
 
   - package-ecosystem: nuget
-    directory: /
+    directory: /demo/functions/doc-pipe/save-on-s3
+    schedule:
+      interval: daily
+
+  - package-ecosystem: npm
+    directory: /demo/functions/doc-pipe/extract-data
+    schedule:
+      interval: daily
+
+  # .....
+
+  - package-ecosystem: nuget
+    directory: /demo/functions/basic/divide-by
+    schedule:
+      interval: daily
+
+  - package-ecosystem: nuget
+    directory: /demo/functions/basic/sleep
     schedule:
       interval: daily
 
   - package-ecosystem: gradle
-    directory: /
-    schedule:
-      interval: daily
-
-  - package-ecosystem: docker
-    directory: /
+    directory: /demo/functions/basic/plus-one
     schedule:
       interval: daily
