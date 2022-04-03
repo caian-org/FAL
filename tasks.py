@@ -1,5 +1,5 @@
 from invoke import task
-from misc import Command
+from build import Command
 
 
 SRC_DIR = 'fal'

@@ -5,7 +5,7 @@ import json
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from invoke import task
-from misc import Project
+from build import Project
 
 
 @task

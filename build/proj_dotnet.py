@@ -1,4 +1,4 @@
-from misc.command import Command
+from build.command import Command
 
 
 class DotNetProject(Command):
