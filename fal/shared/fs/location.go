@@ -1,4 +1,7 @@
-package util
+/**
+ * A module that represents a location inside the filesystem and interacts with it
+ */
+package fs
 
 import (
 	"errors"
@@ -13,12 +16,12 @@ type Location struct {
 	Path string
 }
 
-func (c Location) join(d string) string {
-	return filepath.Join(c.Path, d)
-}
-
 func NewLocation(path string) *Location {
 	return &Location{path}
+}
+
+func (c Location) join(d string) string {
+	return filepath.Join(c.Path, d)
 }
 
 func (c Location) InnerLevel(d string) *Location {
@@ -31,6 +34,7 @@ func (c Location) CreateDir() error {
 
 func (c Location) CreateFile(filename string, data []byte) (string, error) {
 	filepath := c.join(filename)
+
 	err := os.WriteFile(filepath, data, 0644)
 	if err != nil {
 		return "", err
@@ -66,6 +70,5 @@ func (c Location) CreateManyFiles(files FileList) ([]string, error) {
 }
 
 func (c Location) ReadFile(filename string) ([]byte, error) {
-	f := c.join(filename)
-	return os.ReadFile(f)
+	return os.ReadFile(c.join(filename))
 }
