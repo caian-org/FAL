@@ -5,10 +5,10 @@ import (
 	"fmt"
 
 	"fal/builder/wrapper"
-	"fal/util"
+	"fal/shared/fs"
 )
 
-type WrapperBuilderFunc func(location *util.Location) error
+type WrapperBuilderFunc func(location *fs.Location) error
 
 type WrapperLang = int32
 

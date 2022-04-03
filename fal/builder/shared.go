@@ -2,7 +2,7 @@ package builder
 
 import (
 	_ "embed"
-	"fal/util"
+	"fal/shared/fs"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 	_libfal_make []byte
 )
 
-func InitSharedLib(buildDir *util.Location) error {
+func InitSharedLib(buildDir *fs.Location) error {
 	wd := buildDir.InnerLevel("shared")
 
 	err := wd.CreateDir()
@@ -27,7 +27,7 @@ func InitSharedLib(buildDir *util.Location) error {
 		return err
 	}
 
-	f := util.FileList{
+	f := fs.FileList{
 		"go.mod":   _libfal_mod,
 		"go.sum":   _libfal_sum,
 		"Makefile": _libfal_make,

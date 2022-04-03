@@ -2,7 +2,7 @@ package wrapper
 
 import (
 	_ "embed"
-	"fal/util"
+	"fal/shared/fs"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 	_python_lock []byte
 )
 
-func BuildPythonWrapper(wd *util.Location) error {
+func BuildPythonWrapper(wd *fs.Location) error {
 	ld := wd.InnerLevel("python")
 
 	err := ld.CreateDir()

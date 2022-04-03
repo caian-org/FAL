@@ -2,7 +2,7 @@ package wrapper
 
 import (
 	_ "embed"
-	"fal/util"
+	"fal/shared/fs"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 	_js_lock []byte
 )
 
-func BuildJavaScriptWrapper(wd *util.Location) error {
+func BuildJavaScriptWrapper(wd *fs.Location) error {
 	ld := wd.InnerLevel("javascript")
 
 	err := ld.CreateDir()
@@ -24,7 +24,7 @@ func BuildJavaScriptWrapper(wd *util.Location) error {
 		return err
 	}
 
-	f := util.FileList{
+	f := fs.FileList{
 		"index.js":          _js_main,
 		"package.json":      _js_package,
 		"package-lock.json": _js_lock,

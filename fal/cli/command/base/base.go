@@ -1,20 +1,20 @@
 package base
 
 import (
-	"fal/config"
-	"fal/util"
+	"fal/manifest"
+	"fal/shared/fs"
 )
 
 type Command struct {
-	Verbose bool   `short:"v" help:"Increase logging information"`
+	Verbose bool   `short:"v" help:"Increase logging information."`
 	Path    string `arg:"" name:"path" type:"path" help:"The FAL project location."`
 }
 
-func (c Command) GetConfig(rootpath *util.Location) (*config.FALConfig, error) {
-	config, err := config.LoadAndValidate(rootpath)
+func (c Command) GetConfig(rootpath *fs.Location) (*manifest.FALManifest, error) {
+	manifest, err := manifest.LoadAndValidate(rootpath)
 	if err != nil {
 		return nil, err
 	}
 
-	return config, nil
+	return manifest, nil
 }

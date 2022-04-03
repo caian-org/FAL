@@ -2,7 +2,7 @@ package wrapper
 
 import (
 	_ "embed"
-	"fal/util"
+	"fal/shared/fs"
 )
 
 var (
@@ -16,7 +16,7 @@ var (
 	_ruby_lock []byte
 )
 
-func BuildRubyWrapper(wd *util.Location) error {
+func BuildRubyWrapper(wd *fs.Location) error {
 	ld := wd.InnerLevel("ruby")
 
 	err := ld.CreateDir()
@@ -24,7 +24,7 @@ func BuildRubyWrapper(wd *util.Location) error {
 		return err
 	}
 
-	f := util.FileList{
+	f := fs.FileList{
 		"main.rb":      _ruby_main,
 		"Gemfile":      _ruby_gem,
 		"Gemfile.lock": _ruby_lock,

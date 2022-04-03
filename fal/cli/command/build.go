@@ -3,7 +3,7 @@ package command
 import (
 	"fal/builder"
 	"fal/cli/command/base"
-	"fal/util"
+	"fal/shared/fs"
 )
 
 type Build struct {
@@ -11,28 +11,28 @@ type Build struct {
 }
 
 func (c *Build) Run() error {
-	rootpath := util.NewLocation(c.Path)
-	config, err := c.GetConfig(rootpath)
+	rootlvl := fs.NewLocation(c.Path)
+	config, err := c.GetConfig(rootlvl)
 	if err != nil {
 		return err
 	}
 
-	buildDir := rootpath.InnerLevel("build")
-	err = buildDir.CreateDir()
+	buildlvl := rootlvl.InnerLevel("build")
+	err = buildlvl.CreateDir()
 	if err != nil {
 		return err
 	}
 
-	builder.InitSharedLib(buildDir)
+	builder.InitSharedLib(buildlvl)
 
-	wrappersDir := buildDir.InnerLevel("wrappers")
+	wrapperlvl := buildlvl.InnerLevel("wrapper")
 	for _, lang := range config.Targets {
 		langBuilder, err := builder.GetWrapperBuilderOf(lang)
 		if err != nil {
 			return nil
 		}
 
-		err = langBuilder(wrappersDir)
+		err = langBuilder(wrapperlvl)
 		if err != nil {
 			return err
 		}

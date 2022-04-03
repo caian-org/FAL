@@ -1,11 +1,11 @@
 package manifest
 
 import (
-	"fal/util"
+	"fal/shared/fs"
 	"gopkg.in/yaml.v2"
 )
 
-func LoadAndValidate(rootpath *util.Location) (*FALManifest, error) {
+func LoadAndValidate(rootpath *fs.Location) (*FALManifest, error) {
 	data, err := rootpath.ReadFile(".fal.yml")
 	if err != nil {
 		return nil, err
