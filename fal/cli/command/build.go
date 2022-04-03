@@ -1,9 +1,9 @@
 package command
 
 import (
-	"fal/builder"
 	"fal/cli/command/base"
 	"fal/shared/fs"
+	"fal/wrapper"
 )
 
 type Build struct {
@@ -11,28 +11,28 @@ type Build struct {
 }
 
 func (c *Build) Run() error {
-	rootlvl := fs.NewLocation(c.Path)
-	config, err := c.GetConfig(rootlvl)
+	rootlevel := fs.NewLocation(c.Path)
+	config, err := c.GetConfig(rootlevel)
 	if err != nil {
 		return err
 	}
 
-	buildlvl := rootlvl.InnerLevel("build")
-	err = buildlvl.CreateDir()
+	buildlevel := rootlevel.InnerLevel("_fal")
+	err = buildlevel.CreateDir()
 	if err != nil {
 		return err
 	}
 
-	builder.InitSharedLib(buildlvl)
+	wrapper.InitSharedLib(buildlevel)
 
-	wrapperlvl := buildlvl.InnerLevel("wrapper")
+	wrapperlevel := buildlevel.InnerLevel("target")
 	for _, lang := range config.Targets {
-		langBuilder, err := builder.GetWrapperBuilderOf(lang)
+		langBuilder, err := wrapper.GetWrapperBuilderOf(lang)
 		if err != nil {
 			return nil
 		}
 
-		err = langBuilder(wrapperlvl)
+		err = langBuilder(wrapperlevel)
 		if err != nil {
 			return err
 		}
