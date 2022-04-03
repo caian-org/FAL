@@ -1,0 +1,98 @@
+name: Build test
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+#     - name: Setup NodeJS
+#       uses: actions/setup-node@v2
+#       with:
+#         node-version: 16.13.x
+
+#     - name: Setup Ruby
+#       uses: ruby/setup-ruby@v1
+#       with:
+#         ruby-version: 2.7.5
+
+#     - name: Setup Python
+#       uses: actions/setup-python@v2
+#       with:
+#         python-version: 3.8.x
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.18.x
+
+      - name: Cache Go packages
+        id: cache-go-pkgs
+        uses: actions/cache@v2
+        with:
+          # In order:
+          # * Module download cache
+          # * Build cache (Linux)
+          # * Build cache (Mac)
+          # * Build cache (Windows)
+          path: |
+            ~/go/pkg/mod
+            ~/.cache/go-build
+            ~/Library/Caches/go-build
+            %LocalAppData%\go-build
+          key: ${{ matrix.os }}-go-${{ hashFiles('fal/**/go.sum') }}
+          restore-keys: |
+            ${{ matrix.os }}-go-
+
+#     - name: Cache node modules
+#       id: cache-node-modules
+#       uses: actions/cache@v2
+#       with:
+#         path: |
+#           **/node_modules
+#         key: ${{ matrix.os }}-node-${{ hashFiles('**/package-lock.json') }}
+#         restore-keys: |
+#           ${{ matrix.os }}-node-
+
+      - name: Get Go dependencies
+        if: steps.cache-go-pkgs.outputs.cache-hit != 'true'
+        run: cd fal && go get
+
+      - name: Build FAL
+        run: cd fal && go build -o falctl && mv falctl ..
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: libfal-${{ github.sha }}-${{ matrix.os }}
+          path: falctl
+          retention-days: 7
+
+#     - name: Install JS wrapper dependencies
+#       if: steps.cache-node-modules.outputs.cache-hit != 'true'
+#       run: |
+#         cd fal/wrappers/javascript
+#         npm install
+
+#     - name: Install Ruby wrapper dependencies
+#       run: |
+#         cd fal/wrappers/ruby
+#         bundle install
+
+#     - name: Run tests
+#       run: |
+#         node tests/javascript/index.js
+#         ruby tests/ruby/main.rb
+#         python3 tests/python/main.py
