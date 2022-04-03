@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	//go:embed ruby/fal.rb
+	//go:embed ruby/main.rb
 	_ruby_main []byte
 
 	//go:embed ruby/Gemfile
@@ -25,6 +25,7 @@ func BuildRubyWrapper(wd *util.Location) error {
 	}
 
 	f := util.FileList{
+		"main.rb":      _ruby_main,
 		"Gemfile":      _ruby_gem,
 		"Gemfile.lock": _ruby_lock,
 	}

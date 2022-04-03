@@ -25,6 +25,7 @@ func BuildJavaScriptWrapper(wd *util.Location) error {
 	}
 
 	f := util.FileList{
+		"index.js":          _js_main,
 		"package.json":      _js_package,
 		"package-lock.json": _js_lock,
 	}

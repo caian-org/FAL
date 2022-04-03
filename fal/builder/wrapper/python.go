@@ -6,8 +6,14 @@ import (
 )
 
 var (
-	//go:embed python/fal.py
+	//go:embed python/main.py
 	_python_main []byte
+
+	//go:embed python/pyproject.toml
+	_python_pyproj []byte
+
+	//go:embed python/poetry.lock
+	_python_lock []byte
 )
 
 func BuildPythonWrapper(wd *util.Location) error {
@@ -18,7 +24,7 @@ func BuildPythonWrapper(wd *util.Location) error {
 		return err
 	}
 
-	_, err = ld.CreateFile("fal.py", _python_main)
+	_, err = ld.CreateFile("main.py", _python_main)
 	if err != nil {
 		return err
 	}
