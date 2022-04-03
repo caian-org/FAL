@@ -1,4 +1,4 @@
-package wrapper
+package target
 
 import (
 	_ "embed"
@@ -16,7 +16,7 @@ var (
 	_ruby_lock []byte
 )
 
-func BuildRubyWrapper(wd *fs.Location) error {
+func WrapperRubyBuilder(wd *fs.Location) error {
 	ld := wd.InnerLevel("ruby")
 
 	err := ld.CreateDir()

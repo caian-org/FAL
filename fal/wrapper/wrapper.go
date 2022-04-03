@@ -1,11 +1,11 @@
-package builder
+package wrapper
 
 import (
 	"errors"
 	"fmt"
 
-	"fal/builder/wrapper"
 	"fal/shared/fs"
+	. "fal/wrapper/target"
 )
 
 type WrapperBuilderFunc func(location *fs.Location) error
@@ -15,7 +15,7 @@ type WrapperLang = int32
 const (
 	WrapperRuby WrapperLang = iota
 	WrapperPython
-	WrapperJavaScript
+	WrapperJavascript
 )
 
 func targetFieldToWrapperLang(target string) (WrapperLang, error) {
@@ -28,7 +28,7 @@ func targetFieldToWrapperLang(target string) (WrapperLang, error) {
 	}
 
 	if target == "javascript" {
-		return WrapperJavaScript, nil
+		return WrapperJavascript, nil
 	}
 
 	return -1, errors.New(fmt.Sprintf("Unsupported target '%s'", target))
@@ -42,13 +42,13 @@ func GetWrapperBuilderOf(target string) (WrapperBuilderFunc, error) {
 
 	switch lang {
 	case WrapperRuby:
-		return wrapper.BuildRubyWrapper, nil
+		return WrapperRubyBuilder, nil
 
 	case WrapperPython:
-		return wrapper.BuildPythonWrapper, nil
+		return WrapperPythonBuilder, nil
 
-	case WrapperJavaScript:
-		return wrapper.BuildJavaScriptWrapper, nil
+	case WrapperJavascript:
+		return WrapperJavascriptBuilder, nil
 	}
 
 	return nil, errors.New(fmt.Sprintf("Target '%s' is not implemented yet", target))

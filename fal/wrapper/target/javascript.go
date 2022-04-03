@@ -1,4 +1,4 @@
-package wrapper
+package target
 
 import (
 	_ "embed"
@@ -7,16 +7,16 @@ import (
 
 var (
 	//go:embed javascript/index.js
-	_js_main []byte
+	_javascript_main []byte
 
 	//go:embed javascript/package.json
-	_js_package []byte
+	_javascript_package []byte
 
 	//go:embed javascript/package-lock.json
-	_js_lock []byte
+	_javascript_lock []byte
 )
 
-func BuildJavaScriptWrapper(wd *fs.Location) error {
+func WrapperJavascriptBuilder(wd *fs.Location) error {
 	ld := wd.InnerLevel("javascript")
 
 	err := ld.CreateDir()
@@ -25,9 +25,9 @@ func BuildJavaScriptWrapper(wd *fs.Location) error {
 	}
 
 	f := fs.FileList{
-		"index.js":          _js_main,
-		"package.json":      _js_package,
-		"package-lock.json": _js_lock,
+		"index.js":          _javascript_main,
+		"package.json":      _javascript_package,
+		"package-lock.json": _javascript_lock,
 	}
 
 	_, err = ld.CreateManyFiles(f)

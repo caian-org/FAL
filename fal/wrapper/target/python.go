@@ -1,4 +1,4 @@
-package wrapper
+package target
 
 import (
 	_ "embed"
@@ -10,13 +10,13 @@ var (
 	_python_main []byte
 
 	//go:embed python/pyproject.toml
-	_python_pyproj []byte
+	_python_proj []byte
 
 	//go:embed python/poetry.lock
 	_python_lock []byte
 )
 
-func BuildPythonWrapper(wd *fs.Location) error {
+func WrapperPythonBuilder(wd *fs.Location) error {
 	ld := wd.InnerLevel("python")
 
 	err := ld.CreateDir()
@@ -24,7 +24,13 @@ func BuildPythonWrapper(wd *fs.Location) error {
 		return err
 	}
 
-	_, err = ld.CreateFile("main.py", _python_main)
+	f := fs.FileList{
+		"main.py":        _python_main,
+		"pyproject.toml": _python_proj,
+		"poetry.lock":    _python_lock,
+	}
+
+	_, err = ld.CreateManyFiles(f)
 	if err != nil {
 		return err
 	}
