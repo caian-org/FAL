@@ -1,0 +1,14 @@
+---
+
+$schema: http://json-schema.org/draft-07/schema
+$id: http://fal.co/v1/manifest.json
+type: object
+required:
+  - meta
+    #  - functions
+    #  - assemblies
+additionalProperties: false
+
+properties:
+  meta:
+    $ref: http://fal.co/v1/manifest.json#/meta

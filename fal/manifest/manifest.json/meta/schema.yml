@@ -1,0 +1,20 @@
+---
+
+$id: http://fal.co/v1/manifest.json#/meta
+type: object
+required:
+  - package
+additionalProperties: false
+properties:
+  package:
+    type: object
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      version:
+        type: string
+      author:
+        type: string
+      description:
+        type: string
