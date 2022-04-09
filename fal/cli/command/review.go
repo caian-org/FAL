@@ -12,12 +12,12 @@ type Review struct {
 
 func (c *Review) Run() error {
 	rootpath := fs.NewLocation(c.Path)
-	config, err := c.GetConfig(rootpath)
+	manifest, err := c.LoadManifest(rootpath)
 	if err != nil {
 		return err
 	}
 
-	name := config.Meta.Package.Name
+	name := manifest.Meta.Package.Name
 	fmt.Printf("%s\n", name)
 	return nil
 }

@@ -10,7 +10,7 @@ type Command struct {
 	Path    string `arg:"" name:"path" type:"path" help:"The FAL project location."`
 }
 
-func (c Command) GetConfig(rootpath *fs.Location) (*manifest.FALManifest, error) {
+func (c Command) LoadManifest(rootpath *fs.Location) (*manifest.FALManifest, error) {
 	manifest, err := manifest.LoadAndValidate(rootpath)
 	if err != nil {
 		return nil, err

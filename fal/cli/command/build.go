@@ -16,7 +16,7 @@ func (c *Build) Run() error {
 	log.DebugF("Build routine started", log.Fields{"path": c.Path})
 
 	rootlevel := fs.NewLocation(c.Path)
-	config, err := c.GetConfig(rootlevel)
+	manifest, err := c.LoadManifest(rootlevel)
 	if err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (c *Build) Run() error {
 	wrapper.InitSharedLib(buildlevel)
 
 	wrapperlevel := buildlevel.InnerLevel("target")
-	for _, lang := range config.Targets {
+	for _, lang := range manifest.Targets {
 		langBuilder, err := wrapper.GetWrapperBuilderOf(lang)
 		if err != nil {
 			return nil
