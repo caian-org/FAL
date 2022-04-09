@@ -7,10 +7,11 @@ ARTIFACT = 'falctl'
 
 
 def _build(c, flags=None):
-    b = f'go build {flags or ""} -o {ARTIFACT} .'
-    m = f'mv {ARTIFACT} ..'
+    before = 'go run -tags _beforebuild beforebuild.go'
+    build = f'go build {flags or ""} -o {ARTIFACT} .'
+    move = f'mv {ARTIFACT} ..'
 
-    return Command(c, SRC_DIR).run(b).run(m)
+    return Command(c, SRC_DIR).run(before).run(build).run(move)
 
 
 # ~~~~
