@@ -1,3 +1,5 @@
+//go:build !_beforebuild
+
 package manifest
 
 import (
