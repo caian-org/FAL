@@ -1,53 +1,52 @@
 package manifest
 
 import (
-	"context"
 	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/qri-io/jsonschema"
+	gjs "github.com/xeipuuv/gojsonschema"
 )
 
 var (
-	//go:embed schema.json
-	_schema_doc []byte
+	//go:embed manifest.json/schema.json
+	_schema_doc_root string
+
+	//go:embed manifest.json/meta/schema.json
+	_schema_doc_meta string
 )
 
-type schema = jsonschema.Schema
-
-func formatJsonSchemaError(i int, e jsonschema.KeyError) string {
-	m := "[JsonSchemaError #%d] at property '%s': %s"
-	return fmt.Sprintf(m, i, e.PropertyPath, e.Message)
-}
-
-func getSchema() (*schema, error) {
-	s := &schema{}
-	if err := json.Unmarshal(_schema_doc, s); err != nil {
-		return nil, err
-	}
-
-	return s, nil
+func loadJSON(c string) gjs.JSONLoader {
+	return gjs.NewStringLoader(c)
 }
 
 func validateSchema(manifest *FALManifest) error {
-	s, err := getSchema()
+	loader := gjs.NewSchemaLoader()
+	loader.AddSchemas(loadJSON(_schema_doc_meta))
+
+	schema, err := loader.Compile(loadJSON(_schema_doc_root))
 	if err != nil {
 		return err
 	}
 
-	ctx := context.Background()
 	manifestEncoded, err := json.Marshal(manifest)
 	if err != nil {
 		return err
 	}
 
-	if errs, _ := s.ValidateBytes(ctx, manifestEncoded); len(errs) > 0 {
+	result, err := schema.Validate(loadJSON(string(manifestEncoded)))
+	if err != nil {
+		panic(err)
+	}
+
+	if !result.Valid() {
 		errorList := []string{}
-		for i, err := range errs {
-			errorList = append(errorList, formatJsonSchemaError(i+1, err))
+
+		for i, e := range result.Errors() {
+			errMsg := fmt.Sprintf("[ManifestSchemaError #%d] at property '%s' --> %s", i, e.Field(), e.Description())
+			errorList = append(errorList, errMsg)
 		}
 
 		return errors.New(strings.Join(errorList, "\n"))
