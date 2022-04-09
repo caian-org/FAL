@@ -71,7 +71,11 @@ jobs:
         run: cd fal && go get
 
       - name: Build FAL
-        run: cd fal && go build -o falctl && mv falctl ..
+        run: |
+          cd fal
+          go run -tags _beforebuild beforebuild.go
+          go build -o falctl
+          mv falctl ..
 
       - name: Upload binary
         uses: actions/upload-artifact@v2
