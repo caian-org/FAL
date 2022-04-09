@@ -1,0 +1,27 @@
+---
+
+$id: http://fal.co/v1/manifest.json#/function
+type: array
+items:
+  - type: object
+    required:
+      - name
+      - arn
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      arn:
+        type: string
+      with:
+        type: object
+        additionalProperties: false
+        properties:
+          input:
+            type: boolean
+          output:
+            type: boolean
+          default-input:
+            type: string
+          cache-policy:
+            $ref: http://fal.co/v1/manifest.json#/function/item/cache-policy

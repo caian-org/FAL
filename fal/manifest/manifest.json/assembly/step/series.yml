@@ -1,0 +1,12 @@
+$id: http://fal.co/v1/manifest.json#/assembly/item/step/series
+type: object
+required:
+  - series
+additionalProperties: false
+properties:
+  series:
+    type: array
+    items:
+      - type: string
+  awaits:
+    type: boolean

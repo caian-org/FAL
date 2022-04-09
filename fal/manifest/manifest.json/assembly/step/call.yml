@@ -1,0 +1,10 @@
+$id: http://fal.co/v1/manifest.json#/assembly/item/step/call
+type: object
+required:
+  - call
+additionalProperties: false
+properties:
+  call:
+    type: string
+  awaits:
+    type: boolean

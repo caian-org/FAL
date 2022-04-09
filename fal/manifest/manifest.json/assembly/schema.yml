@@ -1,0 +1,20 @@
+---
+
+$id: http://fal.co/v1/manifest.json#/assembly
+type: array
+items:
+  - type: object
+    required:
+      - name
+      - steps
+    additionalProperties: false
+    properties:
+      name:
+        type: string
+      steps:
+        type: array
+        items:
+          anyOf:
+            - $ref: http://fal.co/v1/manifest.json#/assembly/item/step/call
+            - $ref: http://fal.co/v1/manifest.json#/assembly/item/step/series
+            - $ref: http://fal.co/v1/manifest.json#/assembly/item/step/map

@@ -4,11 +4,16 @@ $schema: http://json-schema.org/draft-07/schema
 $id: http://fal.co/v1/manifest.json
 type: object
 required:
-  - meta
-    #  - functions
-    #  - assemblies
+  - targets
+  - functions
+  - assemblies
 additionalProperties: false
-
 properties:
   meta:
     $ref: http://fal.co/v1/manifest.json#/meta
+  targets:
+    $ref: http://fal.co/v1/manifest.json#/target
+  functions:
+    $ref: http://fal.co/v1/manifest.json#/function
+  assemblies:
+    $ref: http://fal.co/v1/manifest.json#/assembly

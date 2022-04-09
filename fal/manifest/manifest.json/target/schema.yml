@@ -1,0 +1,11 @@
+---
+
+$id: http://fal.co/v1/manifest.json#/target
+minItems: 1
+type: array
+items:
+  - type: string
+    enum:
+      - python
+      - javascript
+      - ruby

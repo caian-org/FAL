@@ -1,0 +1,10 @@
+$id: http://fal.co/v1/manifest.json#/assembly/item/step/map
+type: object
+required:
+  - map
+additionalProperties: false
+properties:
+  map:
+    type: string
+  awaits:
+    type: boolean
