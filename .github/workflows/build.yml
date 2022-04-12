@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache Go packages
         id: cache-go-pkgs
-        uses: actions/cache@v3.0.1
+        uses: actions/cache@v3.0.2
         with:
           # In order:
           # * Module download cache
@@ -58,7 +58,7 @@ jobs:
 
 #     - name: Cache node modules
 #       id: cache-node-modules
-#       uses: actions/cache@v3.0.1
+#       uses: actions/cache@v3.0.2
 #       with:
 #         path: |
 #           **/node_modules
