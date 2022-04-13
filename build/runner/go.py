@@ -1,7 +1,8 @@
-from build.command import Command
+# modules
+from build.task import TaskRunner
 
 
-class GoProject(Command):
+class TaskRunnerGolang(TaskRunner):
     def go_prepare(self):
         if self._has('go.mod') and self._has('go.sum'):
             artf = 'bin/handler'

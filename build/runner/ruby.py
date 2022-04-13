@@ -1,7 +1,8 @@
-from build.command import Command
+# modules
+from build.task import TaskRunner
 
 
-class RubyProject(Command):
+class TaskRunnerRuby(TaskRunner):
     def ruby_prepare(self):
         if self._has('Gemfile') and self._has('Gemfile.lock'):
             self.run('bundle config set --local path vendor')

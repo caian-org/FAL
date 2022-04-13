@@ -1,0 +1,12 @@
+[master]
+
+ignore=yapt/tests
+disable=missing-module-docstring
+
+
+[similarities]
+
+min-similarity-lines=4
+ignore-comments=yes
+ignore-docstrings=yes
+ignore-imports=yes

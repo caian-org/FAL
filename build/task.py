@@ -1,6 +1,7 @@
+# standard
 from os import listdir
-from os.path import join
 from os.path import exists
+from os.path import join
 
 CYAN = ''
 DIM = ''
@@ -9,9 +10,10 @@ RESET_ALL = ''
 COUNTER = 0
 
 try:
-    from colorama import init
-    from colorama import Style
+    # 3rd-party
     from colorama import Fore
+    from colorama import Style
+    from colorama import init
 
     init()
     CYAN = Fore.CYAN
@@ -22,8 +24,11 @@ except ModuleNotFoundError:
     pass
 
 
-class Command:
+class TaskRunner:
     def __init__(self, c, pwd=None):
+        if type(self) == TaskRunner:
+            raise TypeError(f'<{cls.__name__}> must be subclassed')
+
         self.c = c
         self.pwd = pwd
 

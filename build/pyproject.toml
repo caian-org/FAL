@@ -1,0 +1,29 @@
+[tool.poetry]
+name        = "fal-build-tools"
+version     = "0.1.0"
+description = "Helper classes to build FAL, it's demo functions and other related stuff"
+authors     = ["Caian Ertl <hi@caian.org>"]
+license     = "CC0-1.0"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+invoke = "1.7.0"
+
+[tool.poetry.dev-dependencies]
+bandit     = "1.7.4"
+black      = "22.3.0"
+isort      = "5.10.1"
+jedi       = "0.18.1"
+poethepoet = "0.13.1"
+pylint     = "2.13.5"
+
+[tool.poe.tasks]
+"check:lint"     = "pylint --fail-under 9 --rcfile .pylintrc --output-format colorized --verbose ."
+"check:security" = "bandit --exclude -r ."
+"check:style"    = "black -l 120 -S --check ."
+"fix:imports"    = "isort --sl ."
+"fix:style"      = "black -l 120 -S ."
+
+[build-system]
+requires      = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

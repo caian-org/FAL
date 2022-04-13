@@ -1,7 +1,8 @@
-from build.command import Command
+# modules
+from build.task import TaskRunner
 
 
-class DotNetProject(Command):
+class TaskRunnerDotNet(TaskRunner):
     def dotnet_prepare(self):
         if self._has_ext('.fsproj') or self._has_ext('.csproj'):
             fw = '--framework net6.0'

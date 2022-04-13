@@ -1,7 +1,8 @@
-from build.command import Command
+# modules
+from build.task import TaskRunner
 
 
-class NodeProject(Command):
+class TaskRunnerNodeJS(TaskRunner):
     def npm_prepare(self):
         if self._has('package.json') and self._has('package-lock.json'):
             self.run('npm install')

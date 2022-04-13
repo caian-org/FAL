@@ -1,5 +1,5 @@
 from invoke import task
-from build import Command
+from build import TaskRunnerGolang
 
 
 SRC_DIR = 'fal'
@@ -11,13 +11,13 @@ def _build(c, flags=None):
     build = f'go build {flags or ""} -o {ARTIFACT} .'
     move = f'mv {ARTIFACT} ..'
 
-    return Command(c, SRC_DIR).run(before).run(build).run(move)
+    return TaskRunnerGolang(c, SRC_DIR).run(before).run(build).run(move)
 
 
 # ~~~~
 @task
 def format(c):
-    Command(c).run(f'gofmt -s -w {SRC_DIR}')
+    TaskRunnerGolang(c).run(f'gofmt -s -w {SRC_DIR}')
 
 
 @task
