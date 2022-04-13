@@ -78,7 +78,7 @@ jobs:
           mv falctl ..
 
       - name: Upload binary
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: libfal-${{ github.sha }}-${{ matrix.os }}
           path: falctl
